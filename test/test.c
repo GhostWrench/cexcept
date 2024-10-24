@@ -38,8 +38,7 @@ cex buggy1() {
     arr1 = malloc(200);
     cex_free_list_add(cexfl, arr1, free);
     cex_free_list_remove(cexfl, arr2, true);
-    if (2 == 2)
-        CEX_THROW_F(cexfl, "Something happened ??\n");
+    CEX_THROW_F(cexfl, "Something happened ??\n");
 }
 
 cex buggy2() {
