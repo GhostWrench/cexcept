@@ -21,10 +21,10 @@ includedir = $(prefix)/include
 libdir = $(exec_prefix)/lib
 
 # Project configuration
-PROJECT_NAME = cex
-VERSION_MAJOR = $(shell sed -n -e 's/\#define CEX_VERSION_MAJOR \([0-9]*\)/\1/p' $(srcdir)/include/$(PROJECT_NAME).h)
-VERSION_MINOR = $(shell sed -n -e 's/\#define CEX_VERSION_MINOR \([0-9]*\)/\1/p' $(srcdir)/include/$(PROJECT_NAME).h)
-VERSION_PATCH = $(shell sed -n -e 's/\#define CEX_VERSION_PATCH \([0-9]*\)/\1/p' $(srcdir)/include/$(PROJECT_NAME).h)
+PROJECT_NAME = cexcept
+VERSION_MAJOR = $(shell sed -n -e 's/\#define CEXCEPT_VERSION_MAJOR \([0-9]*\)/\1/p' $(srcdir)/include/$(PROJECT_NAME).h)
+VERSION_MINOR = $(shell sed -n -e 's/\#define CEXCEPT_VERSION_MINOR \([0-9]*\)/\1/p' $(srcdir)/include/$(PROJECT_NAME).h)
+VERSION_PATCH = $(shell sed -n -e 's/\#define CEXCEPT_VERSION_PATCH \([0-9]*\)/\1/p' $(srcdir)/include/$(PROJECT_NAME).h)
 
 # Source and output
 SRC = $(srcdir)/src/$(PROJECT_NAME).c

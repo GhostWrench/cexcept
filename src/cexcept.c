@@ -1,23 +1,23 @@
 #include <stdlib.h>
 
-#include "cex.h"
+#include "cexcept.h"
 
-typedef struct _cex_free_node {
+typedef struct _cexcept_free_node {
     void *ptr;
-    cex_free_func *free;
-} cex_free_node;
+    cexcept_free_func *free;
+} cexcept_free_node;
 
-typedef struct _cex_free_list {
+typedef struct _cexcept_free_list {
     size_t length;
-    cex_free_node *data;
-} cex_free_list;
+    cexcept_free_node *data;
+} cexcept_free_list;
 
-cex_free_list *cex_free_list_new(size_t length) {
-    cex_free_list *list = calloc(1, sizeof(cex_free_list));
+cexcept_free_list *cexcept_free_list_new(size_t length) {
+    cexcept_free_list *list = calloc(1, sizeof(cexcept_free_list));
     if (!list) {
         return NULL;
     }
-    list->data = calloc(length, sizeof(cex_free_node));
+    list->data = calloc(length, sizeof(cexcept_free_node));
     if (!list->data) {
         free(list);
         return NULL;
@@ -26,7 +26,7 @@ cex_free_list *cex_free_list_new(size_t length) {
     return list;
 }
 
-void cex_free(cex_free_list *list) {
+void cexcept_free(cexcept_free_list *list) {
     for (size_t ii=0; ii<list->length; ii++) {
         if (list->data[ii].ptr) {
             if (list->data[ii].free) {
@@ -42,11 +42,11 @@ void cex_free(cex_free_list *list) {
     free(list);
 }
 
-cex cex_free_list_add(cex_free_list *list, void *ptr, cex_free_func *free) {
+cexcept cexcept_free_list_add(cexcept_free_list *list, void *ptr, cexcept_free_func *free) {
     // Look for the value, do not add if already inserted
     for (size_t ii=0; ii<list->length; ii++) {
         if (ptr == list->data[ii].ptr) {
-            return CEX_OK;
+            return CEXCEPT_OK;
         }
     }
     // Insert the value
@@ -60,12 +60,12 @@ cex cex_free_list_add(cex_free_list *list, void *ptr, cex_free_func *free) {
         }
     }
     if (!inserted) {
-        CEX_THROW("cex_free_list full, cannot add more pointers\n");
+        CEXCEPT_THROW("cexcept_free_list full, cannot add more pointers\n");
     }
-    return CEX_OK;
+    return CEXCEPT_OK;
 }
 
-void cex_free_list_remove(cex_free_list *list, void *ptr, bool do_free) {
+void cexcept_free_list_remove(cexcept_free_list *list, void *ptr, bool do_free) {
     for (size_t ii=0; ii<list->length; ii++) {
         if (ptr == list->data[ii].ptr) {
             if (do_free) {

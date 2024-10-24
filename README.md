@@ -1,3 +1,3 @@
-# cex : C Exceptions
+# cexcept : C Exceptions
 
 This is a minimal exception handling library for C.

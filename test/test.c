@@ -1,4 +1,4 @@
-#include "cex.h"
+#include "cexcept.h"
 
 #include <stdlib.h>
 
@@ -19,50 +19,50 @@ void complex_data_free(void *data) {
 }
 
 void notbuggy() {
-    cex_free_list *cexfl = cex_free_list_new(8);
+    cexcept_free_list *cexceptfl = cexcept_free_list_new(8);
     int *arr1 = malloc(100);
-    cex_free_list_add(cexfl, arr1, NULL);
-    CEX_INFO("I am a function in a test!\n");
-    CEX_WARN("Only allocated %d array!\n", 1);
-    cex_free(cexfl);
+    cexcept_free_list_add(cexceptfl, arr1, NULL);
+    CEXCEPT_INFO("I am a function in a test!\n");
+    CEXCEPT_WARN("Only allocated %d array!\n", 1);
+    cexcept_free(cexceptfl);
 }
 
-cex buggy1() {
-    cex_free_list *cexfl = cex_free_list_new(8);
+cexcept buggy1() {
+    cexcept_free_list *cexceptfl = cexcept_free_list_new(8);
     int *arr1 = malloc(100);
-    cex_free_list_add(cexfl, arr1, free);
+    cexcept_free_list_add(cexceptfl, arr1, free);
     int *arr2 = malloc(100);
-    cex_free_list_add(cexfl, arr2, free);
-    cex_free_list_remove(cexfl, arr1, false);
+    cexcept_free_list_add(cexceptfl, arr2, free);
+    cexcept_free_list_remove(cexceptfl, arr1, false);
     free(arr1);
     arr1 = malloc(200);
-    cex_free_list_add(cexfl, arr1, free);
-    cex_free_list_remove(cexfl, arr2, true);
-    CEX_THROW_F(cexfl, "Something happened ??\n");
+    cexcept_free_list_add(cexceptfl, arr1, free);
+    cexcept_free_list_remove(cexceptfl, arr2, true);
+    CEXCEPT_THROW_F(cexceptfl, "Something happened ??\n");
 }
 
-cex buggy2() {
-    cex_free_list *cexfl = cex_free_list_new(6);
+cexcept buggy2() {
+    cexcept_free_list *cexceptfl = cexcept_free_list_new(6);
     complex_data cd1 = {0};
     complex_data_init(&cd1);
-    cex_free_list_add(cexfl, &cd1, complex_data_free);
+    cexcept_free_list_add(cexceptfl, &cd1, complex_data_free);
     complex_data cd2 = {0};
     complex_data_init(&cd2);
-    cex_free_list_add(cexfl, &cd2, complex_data_free);
+    cexcept_free_list_add(cexceptfl, &cd2, complex_data_free);
     complex_data cd3 = {0};
     complex_data_init(&cd3);
-    cex_free_list_add(cexfl, &cd3, complex_data_free);
+    cexcept_free_list_add(cexceptfl, &cd3, complex_data_free);
     int *simple_data1 = malloc(100);
-    cex_free_list_add(cexfl, simple_data1, free);
+    cexcept_free_list_add(cexceptfl, simple_data1, free);
     int *simple_data2 = malloc(100);
-    cex_free_list_add(cexfl, simple_data2, free);
+    cexcept_free_list_add(cexceptfl, simple_data2, free);
     int *simple_data3 = malloc(100);
-    cex_free_list_add(cexfl, simple_data3, free);
+    cexcept_free_list_add(cexceptfl, simple_data3, free);
     int *simple_data4 = malloc(100);
     // Try to add more than possible
-    CEX_CHECK_ADD(cexfl, simple_data4, free);
-    cex_free(cexfl);
-    return CEX_OK;
+    CEXCEPT_CHECK_ADD(cexceptfl, simple_data4, free);
+    cexcept_free(cexceptfl);
+    return CEXCEPT_OK;
 }
 
 int main() {
