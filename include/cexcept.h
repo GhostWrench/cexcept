@@ -28,7 +28,7 @@
 #endif
 
 /**
- * Exception type, this must be the return type of any function that uses 
+ * Exception type, this must be the return type of any function that uses
  * CEXCEPT_THROW, CEXCEPT_THROW_F, CEXCEPT_CHECK or CEXCEPT_CHECK_F macros
  */
 typedef enum _cexcept {
