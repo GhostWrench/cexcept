@@ -2,5 +2,5 @@
 .vscode/
 
 # Build files
-./build
-./output
+build/
+output/

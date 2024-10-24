@@ -8,9 +8,9 @@ CFLAGS_EXTRA ?=
 LDFLAGS_EXTRA ?=
 
 # Build settings
-CFLAGS = -Wall -Wextra -Wpedantic -std=c17 -fPIC -I$(srcdir)/include
+CFLAGS = -Wall -Wextra -Wpedantic -std=c17 -I$(srcdir)/include
 ifeq ($(BUILD_CFG),debug)
-CFLAGS += -g -O0 -DDEBUG
+CFLAGS += -g -O0 -fanalyzer -Wno-analyzer-malloc-leak -DDEBUG
 endif
 
 # Directory definitions
@@ -35,15 +35,21 @@ LIB = ./output/lib$(PROJECT_NAME)-v$(VERSION_MAJOR)-$(VERSION_MINOR)-$(VERSION_P
 else
 LIB = ./output/lib$(PROJECT_NAME)-v$(VERSION_MAJOR)-$(VERSION_MINOR)-$(VERSION_PATCH).a
 endif
+TEST = ./build/test/test.elf
+TEST_OUT = ./build/test/test.out
 
 # Build targets
 .PHONY: clean
 
 all: $(LIB)
 
+test: $(TEST)
+
+runtest: $(TEST_OUT)
+
 ./build/%.o : $(srcdir)/src/%.c $(HDR)
 	@mkdir -p ./build
-	$(CC) $(CFLAGS) $(CFLAGS_EXTRA) -c -o $@ $<
+	$(CC) $(CFLAGS) $(CFLAGS_EXTRA) -fPIC -c -o $@ $<
 
 ifeq ($(SHARED_LIB),1)
 $(LIB): $(OBJ)
@@ -54,6 +60,13 @@ $(LIB): $(OBJ)
 	@mkdir -p ./output
 	$(AR) rcs $@ $(OBJ) $(LDFLAGS_EXTRA)
 endif
+
+./build/test/%.elf : $(srcdir)/test/%.c $(LIB)
+	@mkdir -p ./build/test
+	$(CC) $(CFLAGS) $(CFLAGS_EXTRA) -o $@ $< $(LIB) $(LDFLAGS_EXTRA)
+
+./build/test/%.out : ./build/test/%.elf
+	@$(srcdir)/script/runtest.sh $< $@
 
 clean:
 	rm -rf ./build

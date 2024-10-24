@@ -27,11 +27,6 @@
 #define CEX_VERBOSITY CEX_VERBOSITY_WARNING
 #endif
 
-// Setup maximum length of cex memory free list
-#ifndef CEX_FREE_LIST_LENGTH
-#define CEX_FREE_LIST_LENGTH 16
-#endif
-
 /**
  * Exception type, this must be the return type of any function that uses 
  * CEX_THROW, CEX_THROW_F, CEX_CHECK or CEX_CHECK_F macros
@@ -99,9 +94,15 @@ typedef void cex_free_func(void *);
 typedef struct _cex_free_list cex_free_list;
 
 /**
+ * Allocate memory for a free list with capacity for 'length' number of heap
+ * pointers to free
+ */
+cex_free_list *cex_free_list_new(size_t length);
+
+/**
  * Add a heap address and free function to the list of things that need to be
  * free'd. This will only allow addition of unique values. Will throw an 
- * exception if attempting to add more then CEX_MALLOC_LIST_LENGTH to the list.
+ * exception if attempting to add more than the length of the list.
  */
 cex cex_free_list_add(cex_free_list *list, void *ptr, cex_free_func *free);
 
@@ -132,11 +133,24 @@ void cex_free(cex_free_list *list);
  * free all heap memory allocated in the provided 'cex_free_list' and then 
  * return from the calling function with CEX_FAILURE.
  */
-#define CEX_CHECK_F(free_list, ...) { \
+#define CEX_CHECK_F(free_list, expr) { \
     cex ex = (expr); \
     if (ex == CEX_FAILURE) { \
         cex_free(free_list); \
         return ex; \
+    } \
+}
+
+/**
+ * This macro is similar to the cex_free_list_add function except it frees the
+ * value being added upon failure along with the rest of the list and then
+ * returns from the calling function with CEX_FAILURE.
+ */
+#define CEX_CHECK_ADD(list, ptr, func) { \
+    if (!cex_free_list_add((list), (ptr), (func))) { \
+        (func)((ptr)); \
+        cex_free(list); \
+        return CEX_FAILURE; \
     } \
 }
 
