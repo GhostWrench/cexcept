@@ -139,3 +139,31 @@ int main() {
     return CEXCEPT_OK;
 }
 ```
+
+## FLC: Your Frequently Lodged Complaints Answered!
+
+NOTE: The following is meant to be (mostly) tounge-in-cheek, please don't send me angry emails!
+
+C: This library forces the use of function output parameters for errors? Gross! that is not very elegant. Can't you come up with anything more clever?
+
+A: No, use the function call paramters for output like a real developer. You do know how to use pointers right? It is clear from the design of C that function outputs were only meant for exception handling.
+
+C: Why is there no try, catch, finally? Everyone knows that real exceptions have a try catch and finally and exception types!
+
+A: C has 'if' statements, use those instead. What? Are you programming a moonlander or something? Yeesh! If you really can't live without them you should have a look at [exceptions4c](https://github.com/guillermocalvo/exceptions4c)
+
+C: Your implementation of `cexcept_free_table` is really slow! You should use a  hash map for O(1) inserts and removes!
+
+A: Exactly how many resources are you using at one time that you want an effing hash map? If it is more than 10 maybe you should re-consider your career and all your life choices that lead you to this situation. Plus, I read somewhere on the internet that casting pointers to ints so they can be hashed is UB, and I got scared.
+
+C: Why won't you accept my pull request?
+
+A: Just fork the repo or copy-paste the .c and .h files it into your project! It's like ~250 lines of code that I wrote in a weekend. If your mega-corp is dumb enough to use this repo as a dependency then I have no words. I am not doing free labor so your billionaire overlords can have another yacht.
+
+C: You really should be using `whiz-bang-fancy-pants-tool` why aren't you using `whiz-bang-fancy-pants-tool`?
+
+A: You must be lost, this is a library written in C, not C++, Java or JavaScript. Use of any tools more complicated than what what written by GNU 30 years ago is expressly verboten by our lord and savior Linus Torvalds. (except for git)
+
+C: You can't just do stuff like that with (void *) you maniac! Stop it right now and end this monstrosity of a library before our jr devs put it in production and I have to debug it!
+
+A: Lol, (void *) go brrrrrr!
