@@ -25,12 +25,14 @@ $ make BUILD_CFG=debug all
 
 ### Basic usage
 
-A functions which make use of the macros defined in the library must have a return type of `cexcept`. You can exit a function immediately by throwing and exception.
+A functions which make use of the macros defined in the library must have a return type of `cexcept`. You can exit a function immediately by throwing an exception.
 
 ```c
 cexcept my_func() {
     ...
-    CEXCEPT_THROW("Some %s happened!\n", "thing");
+    if (bad_thing_happened) {
+        CEXCEPT_THROW("Some %s happened!\n", "thing");
+    }
     ...
     return CEXCEPT_OK;
 }
@@ -76,12 +78,12 @@ cexcept complex_function() {
 }
 ```
 
-You may have noticed that the cexcept_free_list_add has a `cexcept` return type. And you may be tempted to use `CEXCEPT_CHECK_F` with it. This is generally a bad idea because it will not free the memory that you are attempting to add to it if it fails.
+You may have noticed that the cexcept_free_list_add has a `cexcept` return type. And you may be tempted to use `CEXCEPT_CHECK_F` with it. This is generally a bad idea because it will not free the memory that you are attempting to add to it if it fails. It also works with (FILE*)s and fclose, and probably other common system resource calls.
 
 ```c
 cexcept complex_function_2() {
     cexcept_free_list *free_list = cexcept_free_list_new();
-    int *test = malloc(1000); // <-- This memory will leak if the add fails
+    int *test = malloc(1000*sizeof(int)); // <-- This memory will leak if the add fails
     CEXCEPT_CHECK_F(free_list, cexcept_free_list_add(free_list, test, free));
     ...
 }
@@ -92,7 +94,7 @@ Instead, use the `CEXCEPT_CHECK_ADD` macro
 ```c
 cexcept complex_function_2() {
     cexcept_free_list *free_list = cexcept_free_list_new();
-    int *test = malloc(1000); // <-- This will be free'd before return if the add fails
+    int *test = malloc(1000*sizeof(int)); // <-- This will be free'd before return if the add fails
     CEXCEPT_CHECK_ADD(free_list, test, free);
     ...
 }
@@ -140,7 +142,7 @@ int main() {
 }
 ```
 
-## FLC: Your Frequently Lodged Complaints Answered!
+## FLCs: Your Frequently Lodged Complaints, Answered!
 
 NOTE: The following is meant to be (mostly) tounge-in-cheek, please don't send me angry emails!
 
@@ -162,7 +164,7 @@ A: Just fork the repo or copy-paste the .c and .h files it into your project! It
 
 C: You really should be using `whiz-bang-fancy-pants-tool` why aren't you using `whiz-bang-fancy-pants-tool`?
 
-A: You must be lost, this is a library written in C, not C++, Java or JavaScript. Use of any tools more complicated than what what written by GNU 30 years ago is expressly verboten by our lord and savior Linus Torvalds. (except for git)
+A: You must be lost, this is a library written in C, not C++, Java or JavaScript. Use of any tools more complicated than what what written by GNU in the 1980s is expressly verboten by our lord and savior Linus Torvalds. (except for git)
 
 C: You can't just do stuff like that with (void *) you maniac! Stop it right now and end this monstrosity of a library before our jr devs put it in production and I have to debug it!
 
