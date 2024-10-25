@@ -99,7 +99,7 @@ cexcept complex_function_2() {
 ```
 
 If you have a more complex datatype that has a special free function with the 
-type `void free_func(<any_type>*)` You can pass a pointer to that function to the 
+type `void (*)(<any_type>*)` You can pass a pointer to that function to the 
 free list instead of `NULL` or `free`.
 
 ```c

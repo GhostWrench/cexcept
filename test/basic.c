@@ -27,7 +27,10 @@ void notbuggy() {
     cexcept_free_list_add(cfl, arr1, NULL);
     CEXCEPT_INFO("I am a function in a test!\n");
     CEXCEPT_WARN("Only allocated %d array!\n", 1);
+    int *arr2 = malloc(100*sizeof(int));
+    cexcept_free_list_remove(cfl, arr2, false);
     cexcept_free(cfl);
+    free(arr2);
 }
 
 cexcept buggy1() {

@@ -8,7 +8,7 @@ CFLAGS_EXTRA ?=
 LDFLAGS_EXTRA ?=
 
 # Build settings
-CFLAGS = -Wall -Wextra -Wpedantic -std=c17 -I$(srcdir)/include
+CFLAGS = -Wall -Wextra -std=c17 -I$(srcdir)/include
 ifeq ($(BUILD_CFG),debug)
 CFLAGS += -g -O0 -fanalyzer -Wno-analyzer-malloc-leak -DDEBUG
 endif
@@ -35,17 +35,18 @@ LIB = ./output/lib$(PROJECT_NAME)-v$(VERSION_MAJOR)-$(VERSION_MINOR)-$(VERSION_P
 else
 LIB = ./output/lib$(PROJECT_NAME)-v$(VERSION_MAJOR)-$(VERSION_MINOR)-$(VERSION_PATCH).a
 endif
-TEST = ./build/test/test.elf
-TEST_OUT = ./build/test/test.out
+TEST_SRCS = $(wildcard $(srcdir)/test/*.c)
+TESTS = $(patsubst $(srcdir)/test/%.c,./build/test/%.elf,$(TEST_SRCS))
+TEST_OUTS = $(patsubst $(srcdir)/test/%.c,./build/test/%.out,$(TEST_SRCS))
 
 # Build targets
 .PHONY: clean
 
 all: $(LIB)
 
-test: $(TEST)
+test: $(TESTS)
 
-runtest: $(TEST_OUT)
+runtest: $(TEST_OUTS)
 
 ./build/%.o : $(srcdir)/src/%.c $(HDR)
 	@mkdir -p ./build

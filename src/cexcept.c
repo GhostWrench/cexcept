@@ -2,21 +2,23 @@
 
 #include "cexcept.h"
 
-typedef struct _cexcept_free_node {
+typedef void free_func(void *);
+
+typedef struct _free_node {
     void *ptr;
-    cexcept_free_func *free;
-} cexcept_free_node;
+    free_func *free;
+} free_node;
 
 typedef struct _cexcept_free_list {
     size_t capacity;
     size_t length;
-    cexcept_free_node *data;
+    free_node *data;
 } cexcept_free_list;
 
 // This function is needed rather than using calloc or memset to 0 because
 // NULL is not necessarily 0 on all systems.
-static void null_nodes(cexcept_free_node* nodes, size_t number) {
-    cexcept_free_node *node = nodes;
+static void null_nodes(free_node* nodes, size_t number) {
+    free_node *node = nodes;
     for (size_t ii=0; ii<number; ii++) {
         node->ptr = NULL;
         node->free = NULL;
@@ -30,7 +32,7 @@ cexcept_free_list *cexcept_free_list_new() {
     if (!list) {
         return NULL;
     }
-    list->data = malloc(FREE_LIST_INITIAL_SIZE * sizeof(cexcept_free_node));
+    list->data = malloc(FREE_LIST_INITIAL_SIZE * sizeof(free_node));
     if (!list->data) {
         free(list);
         return NULL;
@@ -57,8 +59,9 @@ void cexcept_free(cexcept_free_list *list) {
     free(list);
 }
 
-cexcept _cexcept_free_list_add(cexcept_free_list *list, void *ptr, cexcept_free_func *free) {
+cexcept cexcept_free_list_add(cexcept_free_list *list, void *ptr, void *ffunc) {
     // Look for the value, do not add if already inserted
+    free_func *ff = (free_func*)ffunc;
     for (size_t ii=0; ii<list->capacity; ii++) {
         if (ptr == list->data[ii].ptr) {
             return CEXCEPT_OK;
@@ -66,9 +69,9 @@ cexcept _cexcept_free_list_add(cexcept_free_list *list, void *ptr, cexcept_free_
     }
     // Expand the amount of memory if capacity is full
     if (list->length >= list->capacity) {
-        cexcept_free_node *new_data = realloc(
+        free_node *new_data = realloc(
             list->data, 
-            (list->capacity*2)*sizeof(cexcept_free_node)
+            (list->capacity*2)*sizeof(free_node)
         );
         if (new_data) {
             list->data = new_data;
@@ -83,7 +86,7 @@ cexcept _cexcept_free_list_add(cexcept_free_list *list, void *ptr, cexcept_free_
     for (size_t ii=0; ii<list->capacity; ii++) {
         if (NULL == list->data[ii].ptr) {
             list->data[ii].ptr = ptr;
-            list->data[ii].free = free;
+            list->data[ii].free = ff;
             inserted = true;
             break;
         }
@@ -111,4 +114,5 @@ void cexcept_free_list_remove(cexcept_free_list *list, void *ptr, bool do_free) 
             return;
         }
     }
+    CEXCEPT_WARN("Address %p was not found in free list\n", ptr);
 }

@@ -81,12 +81,6 @@ typedef enum _cexcept {
 }
 
 /**
- * Type for a function that free's memory (like 'free'). Used to allow a
- * cexcept free list to free more complex data types if needed
- */
-typedef void cexcept_free_func(void *);
-
-/**
  * List containing pointers to memory location along with a free function so
  * that memory can be automatically free'd by the CEXCEPT_THROW_F and
  * CEXCEPT_CHECK_F macros
@@ -103,13 +97,7 @@ cexcept_free_list *cexcept_free_list_new();
  * free'd. This will only allow addition of unique values. Will throw an 
  * exception if attempting to add more than the length of the list.
  */
-cexcept _cexcept_free_list_add(cexcept_free_list *list, void *ptr, cexcept_free_func *free);
-
-/**
- * Convienience macro for _cexcept_free_list_add so that the user can give it
- * any kind function pointer rather than just a 'void func(void *)' function.
- */
-#define cexcept_free_list_add(list, ptr, free) _cexcept_free_list_add((list), (ptr), (cexcept_free_func*)(free))
+cexcept cexcept_free_list_add(cexcept_free_list *list, void *ptr, void *ffunc);
 
 /**
  * Remove a pointer from the free list. If the 'do_free' parameter is true then
@@ -151,13 +139,13 @@ void cexcept_free(cexcept_free_list *list);
  * value being added upon failure along with the rest of the list and then
  * returns from the calling function with CEXCEPT_FAILURE.
  */
-#define CEXCEPT_CHECK_ADD(list, ptr, func) { \
-    if (!cexcept_free_list_add((list), (ptr), (func))) { \
+#define CEXCEPT_CHECK_ADD(list, ptr, ffunc) { \
+    if (!cexcept_free_list_add((list), (ptr), (ffunc))) { \
         _Pragma( "GCC diagnostic push" ) \
         _Pragma( "GCC diagnostic ignored \"-Waddress\"" ) \
         if (ptr) { \
-            if (func) { \
-                (func)((ptr)); \
+            if (ffunc) { \
+                (ffunc)((ptr)); \
             } else { \
                 free(ptr); \
             } \
