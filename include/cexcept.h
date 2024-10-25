@@ -94,17 +94,22 @@ typedef void cexcept_free_func(void *);
 typedef struct _cexcept_free_list cexcept_free_list;
 
 /**
- * Allocate memory for a free list with capacity for 'length' number of heap
- * pointers to free
+ * Allocate memory for a free list to track memory allocated on the stack
  */
-cexcept_free_list *cexcept_free_list_new(size_t length);
+cexcept_free_list *cexcept_free_list_new();
 
 /**
  * Add a heap address and free function to the list of things that need to be
  * free'd. This will only allow addition of unique values. Will throw an 
  * exception if attempting to add more than the length of the list.
  */
-cexcept cexcept_free_list_add(cexcept_free_list *list, void *ptr, cexcept_free_func *free);
+cexcept _cexcept_free_list_add(cexcept_free_list *list, void *ptr, cexcept_free_func *free);
+
+/**
+ * Convienience macro for _cexcept_free_list_add so that the user can give it
+ * any kind function pointer rather than just a 'void func(void *)' function.
+ */
+#define cexcept_free_list_add(list, ptr, free) _cexcept_free_list_add((list), (ptr), (cexcept_free_func*)(free))
 
 /**
  * Remove a pointer from the free list. If the 'do_free' parameter is true then
@@ -148,7 +153,16 @@ void cexcept_free(cexcept_free_list *list);
  */
 #define CEXCEPT_CHECK_ADD(list, ptr, func) { \
     if (!cexcept_free_list_add((list), (ptr), (func))) { \
-        (func)((ptr)); \
+        _Pragma( "GCC diagnostic push" ) \
+        _Pragma( "GCC diagnostic ignored \"-Waddress\"" ) \
+        if (ptr) { \
+            if (func) { \
+                (func)((ptr)); \
+            } else { \
+                free(ptr); \
+            } \
+        } \
+        _Pragma( "GCC diagnostic pop" ) \
         cexcept_free(list); \
         return CEXCEPT_FAILURE; \
     } \

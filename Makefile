@@ -2,7 +2,7 @@ SHELL = /bin/sh
 .SUFFIXES:
 
 # Build options
-BUILD_CFG ?= debug
+BUILD_CFG ?= release
 SHARED_LIB ?= 1
 CFLAGS_EXTRA ?=
 LDFLAGS_EXTRA ?=
@@ -63,7 +63,7 @@ endif
 
 ./build/test/%.elf : $(srcdir)/test/%.c $(LIB)
 	@mkdir -p ./build/test
-	$(CC) $(CFLAGS) $(CFLAGS_EXTRA) -o $@ $< $(LIB) $(LDFLAGS_EXTRA)
+	$(CC) $(CFLAGS) $(CFLAGS_EXTRA) -DCEXCEPT_VERBOSITY=3 -o $@ $< $(LIB) $(LDFLAGS_EXTRA)
 
 ./build/test/%.out : ./build/test/%.elf
 	@$(srcdir)/script/runtest.sh $< $@
