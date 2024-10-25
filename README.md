@@ -129,6 +129,12 @@ int main() {
     complex_data *my_data = complex_data_init();
     cexcept_free_list_add(free_list, my_data, complex_data_free);
     ...
+    FILE *my_file = fopen("./file.txt", "r");
+    cexcept_free_list_add(free_list, my_file, fclose);
+    ...
+    // Free my_file resource early
+    cexcept_free_list_remove(free_list, my_file, true);
+    ...
     cexcept_free(free_list);
     return CEXCEPT_OK;
 }
