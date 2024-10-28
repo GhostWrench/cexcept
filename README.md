@@ -150,7 +150,7 @@ A: No, use the function call parameters for output like a real developer. You do
 
 C: Why is there no try, catch, finally? Everyone knows that real exceptions have a try catch and finally and exception types!
 
-A: C has 'if' statements, use those instead. What? Are you programming a moonlander or something? Yeesh! If you really can't live without them you should have a look at [exceptions4c](https://github.com/guillermocalvo/exceptions4c)
+A: C has 'if' statements, use those instead. What? Are you programming a moonlander or something? Yeesh! If you really can't live without them you should have a look at [exceptions4c](https://github.com/guillermocalvo/exceptions4c).
 
 C: Your implementation of `cexcept_free_table` is really slow! You should use a  hash map for O(1) inserts and removes!
 
@@ -158,7 +158,7 @@ A: Exactly how many resources are you using at one time that you want an effing 
 
 C: Why won't you accept my pull request?
 
-A: Just fork the repo or copy-paste the .c and .h files it into your project! It's like ~250 lines of code that I wrote in a weekend. If your mega-corp is dumb enough to use this repo as a dependency then I have no words. I am not doing free labor so your billionaire overlords can have another yacht.
+A: Just fork the repo or better yet, copy-paste the .c and .h files into your project! It's like ~250 lines of code that I wrote in a weekend. If your mega-corp is dumb enough to use this repo as a dependency then I have no words. I am not doing free labor so your billionaire overlords can have another yacht.
 
 C: You really should be using `whiz-bang-fancy-pants-tool` why aren't you using `whiz-bang-fancy-pants-tool`?
 
