@@ -59,7 +59,7 @@ cexcept my_calling_func2() {
 
 ### Handling heap memory
 
-Many times, memory cleanup needs to be done before exiting a function. cexcept provides a basic datatype to help cleanup memory `cexcept_free_list` that you can add pointers and free functions to that can be automatically free'd with the `CEXCEPT_THROW_F` and `CEXCEPT_CHECK_F` macros. It works with (FILE*)s and fclose, and probably other common system resource calls.
+Many times, memory cleanup needs to be done before exiting a function. cexcept provides a basic datatype to help cleanup memory `cexcept_free_list` that you can add pointers and free functions to that can be automatically free'd with the `CEXCEPT_THROW_F` and `CEXCEPT_CHECK_F` macros.
 
 ```c
 cexcept complex_function() {
@@ -100,9 +100,7 @@ cexcept complex_function_2() {
 }
 ```
 
-If you have a more complex datatype that has a special free function with the 
-type `void (*)(<any_type>*)` You can pass a pointer to that function to the 
-free list instead of `NULL` or `free`.
+If you have a more complex datatype that has a special free function with the type `void (*)(<any_type>*)` You can pass a pointer to that function to the free list instead of `NULL` or `free`. It works with (FILE*)s and fclose, and probably other common system resource calls.
 
 ```c
 typedef struct {
