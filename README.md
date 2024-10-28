@@ -146,7 +146,7 @@ NOTE: The following is meant to be (mostly) tongue-in-cheek, please don't send m
 
 C: This library forces the use of function output parameters for errors? Gross! that is not very elegant. Can't you come up with anything more clever?
 
-A: No, use the function call paramters for output like a real developer. You do know how to use pointers right? It is clear from the design of C that function outputs were only meant for exception handling.
+A: No, use the function call parameters for output like a real developer. You do know how to use pointers right? It is clear from the design of C that function outputs were only meant for exception handling.
 
 C: Why is there no try, catch, finally? Everyone knows that real exceptions have a try catch and finally and exception types!
 
@@ -164,6 +164,6 @@ C: You really should be using `whiz-bang-fancy-pants-tool` why aren't you using 
 
 A: You must be lost, this is a library written in C, not C++, Java or JavaScript. Use of any tools more complicated than what what written by GNU in the 1980s is expressly verboten by our lord and savior Linus Torvalds. (except for git)
 
-C: You can't just do stuff like that with (void *) you maniac! Stop it right now and end this monstrosity of a library before our jr devs put it in production and I have to debug it!
+C: You can't just do stuff like that with (void *) you maniac! Stop it right now and end this monstrosity of a library before our Jr. devs put it in production and I have to debug it!
 
 A: Lol, (void *) go brrrrrr!
