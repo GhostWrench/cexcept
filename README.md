@@ -142,7 +142,7 @@ int main() {
 
 ## FLCs: Your Frequently Lodged Complaints, Answered!
 
-NOTE: The following is meant to be (mostly) tounge-in-cheek, please don't send me angry emails!
+NOTE: The following is meant to be (mostly) tongue-in-cheek, please don't send me angry emails!
 
 C: This library forces the use of function output parameters for errors? Gross! that is not very elegant. Can't you come up with anything more clever?
 
