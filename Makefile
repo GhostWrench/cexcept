@@ -6,11 +6,12 @@ BUILD_CFG ?= release
 SHARED_LIB ?= 1
 CFLAGS_EXTRA ?=
 LDFLAGS_EXTRA ?=
+DESTDIR ?=
 
 # Build settings
-CFLAGS = -Wall -Wextra -std=c17 -I$(srcdir)/include
+CFLAGS = -Wall -Wextra -std=c17 -g -I$(srcdir)/include
 ifeq ($(BUILD_CFG),debug)
-CFLAGS += -g -O0 -fanalyzer -Wno-analyzer-malloc-leak -DDEBUG
+CFLAGS += -O0 -fanalyzer -Wno-analyzer-malloc-leak -DDEBUG
 endif
 
 # Directory definitions
@@ -72,3 +73,9 @@ endif
 clean:
 	rm -rf ./build
 	rm -rf ./output
+
+install: $(LIB) $(HDR)
+	install -d $(DESTDIR)$(includedir)/
+	install -m 644 $(HDR) $(DESTDIR)$(includedir)
+	install -d $(DESTDIR)$(libdir)/
+	install -s -m 644 $(LIB) $(DESTDIR)$(libdir)/
